@@ -1,0 +1,88 @@
+<html>
+<style>
+    .card{
+        width:300px;
+        padding:10px;
+        margin:10px;
+        display:inline-block;
+        border-radius:10px;
+        box-shadow:cadetblue 5px 5px 5px;
+        border-style: solid;
+        border-color:darkcyan
+    }
+    h1{
+        font-family:"Arial";
+    }
+    p,a{
+        font-size:14pt;
+        font-family:"Courier New";
+    }
+    img{
+        width:90%;
+        margin:5px;
+        border-radius:10px;
+        box-shadow:black 15px 5px 0px;
+    }
+    a{
+        background-color:aqua;
+        text-decoration:none;
+        color:white;
+        font-weight:bold;
+        padding:5px;
+        border-radius:10px;
+        border-style: double;
+    }
+    body{
+        background-color:azure
+    }
+</style>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+<script>
+    var data; 
+    function search(){              
+        $.getJSON("https://data.cityofnewyork.us/resource/swhp-yxa4.json",function(results){
+            data = results; 
+        })
+    }
+    
+    function business_title(){
+        var build = "";
+
+        var count = 0;
+        var business_title = document.getElementById("business_title")
+
+        var output = document.getElementById("output")
+        for(var index = 0; index < data.length; index++){
+            ///if(data[index].incident_zip == zip.value ){
+            if(data[index].business_title.toUpperCase().indexOf(business_title.value.toUpperCase())!= -1){
+            build += "<div class='card'>"
+            build += "<h1>" + data[index].business_title + "</h1>"
+            build += "<p>" +"Salary Frequency:"+ data[index].salary_frequency + "<hr>"
+            build += "<p>" +"Salary range from:$"+ data[index].salary_range_from + "</p><hr>"
+            build += "<p>" +"Salary range to:$"+ data[index].salary_range_to + "</p><hr>"
+            build += "<p>( " + data[index].work_location_1 + ")</p>";
+            build += "<a href='https://www.google.com/search?q=maps+" + data[index].work_location_1 + "+%2C+" + "' target='_blank'>Location</a>"
+            build += "<br>"+"<br>"+"or"+ "<p> ( " + data[index].work_location + ")</p>";
+            build += "<a href='https://www.google.com/search?q=maps+" + data[index].work_location + "+%2C+" + "' target='_blank'>Location</a>"
+            build += "</div>"
+            count ++;
+        }   
+        }
+        console.log(build);
+        output.innerHTML = "[Business titles]: " + count + "<br>" +build;    
+    }
+
+</script>
+<body onload = "search()">     
+<input id = "business_title" type = "text" placeholder"Enter job">
+    <button onclick = "business_title()"> display </button>
+
+
+    <div id = "output"></div>
+</body>
+
+
+</html>
